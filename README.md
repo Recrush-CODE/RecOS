@@ -1,3 +1,5 @@
+<img width="1920" height="1080" alt="изображение" src="https://github.com/user-attachments/assets/c0a02971-5c6e-41ac-976b-734852aea6a1" />
+
 # RecOS — Web Operating System
 
 ## Design and Interface
