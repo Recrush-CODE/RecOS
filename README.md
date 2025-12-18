@@ -16,6 +16,6 @@ All necessary tools are available from a unified workspace. File manager, text e
 
 The system receives regular updates with fixes and improvements. Critical issues are resolved with high priority. Operation stability is ensured by thorough testing of each change. All system components undergo compatibility verification. Users can rely on predictable system performance.
 
-RecOS Proprietary License. Only usage of the system in its original form is permitted. Modification, distribution of altered versions, and reverse engineering are prohibited. The license does not grant rights to view or edit source code.
+** RecOS Proprietary License. Only usage of the system in its original form is permitted. Modification, distribution of altered versions, and reverse engineering are prohibited. The license does not grant rights to view or edit source code. **
 
-⭐ If you like the project, give it a star on GitHub!
+** *⭐ If you like the project, give it a star on GitHub!* **
