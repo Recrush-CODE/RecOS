@@ -19,5 +19,3 @@
 ## License
 
 **RecOS Proprietary License. Only usage of the system in its original form is permitted. Modification, distribution of altered versions, and reverse engineering are prohibited. The license does not grant rights to view or edit source code.**
-
-*⭐ If you like the project, give it a star on GitHub!*
