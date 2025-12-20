@@ -1,0 +1,700 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'DejaVu Sans Mono', monospace;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+.desktop {
+    width: 100vw;
+    height: calc(100vh - 40px);
+    position: relative;
+    top: 40px;
+    background-image: url('wallpapers/wallpaper_1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.taskbar {
+    height: 40px;
+    background: rgba(20, 20, 20, 0.95);
+    backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.taskbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.taskbar-apps {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.taskbar-app-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.taskbar-app-icon:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-button {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 18px;
+    color: #e0e0e0;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.menu-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.taskbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.time-display {
+    font-size: 13px;
+    font-weight: bold;
+    color: #e0e0e0;
+    padding: 4px 8px;
+    user-select: none;
+}
+
+.app-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.app-menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.app-menu-window {
+    width: 1512px;
+    height: 824px;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: rgba(20, 20, 20, 0.95);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    transform: scale(0.9) translateY(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.app-menu-overlay.active .app-menu-window {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+.app-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 16px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.app-menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    outline: none;
+    border: none;
+    width: fit-content;
+    height: fit-content;
+}
+
+.app-menu-item:hover {
+    transform: translateY(-2px);
+}
+
+.app-menu-item:focus {
+    outline: none;
+    border: none;
+}
+
+.app-menu-item:active {
+    outline: none;
+    border: none;
+}
+
+.app-menu-item-icon {
+    font-size: 64px;
+    line-height: 1;
+    margin-bottom: 8px;
+    text-align: center;
+    width: 100%;
+}
+
+.app-menu-item-label {
+    font-size: 12px;
+    color: #e0e0e0;
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.window {
+    position: absolute;
+    background: #1d1d1f;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 400px;
+    min-height: 300px;
+    z-index: 10;
+    outline: none;
+    border: none;
+    opacity: 0;
+    transform: scale(0.9);
+    animation: windowAppear 0.3s ease forwards;
+}
+
+@keyframes windowAppear {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes windowFadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+.window.closing {
+    animation: windowFadeOut 0.3s ease forwards;
+    pointer-events: none;
+}
+
+.window.minimizing {
+    animation: windowFadeOut 0.3s ease forwards;
+    pointer-events: none;
+}
+
+.window.active {
+    z-index: 100;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+}
+
+.window.maximized {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0;
+}
+
+.window-header {
+    height: 28px;
+    background: #2d2d2f;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    cursor: move;
+    user-select: none;
+    outline: none;
+    border: none;
+}
+
+.window-controls {
+    display: flex;
+    gap: 6px;
+    margin-right: auto;
+}
+
+.window-control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    outline: none;
+}
+
+.window-control.close {
+    background: #ff5f57;
+}
+
+.window-control.close:hover {
+    background: #ff3b30;
+}
+
+.window-control.minimize {
+    background: #ffbd2e;
+}
+
+.window-control.minimize:hover {
+    background: #ff9500;
+}
+
+.window-control.maximize {
+    background: #28ca42;
+}
+
+.window-control.maximize:hover {
+    background: #1db130;
+}
+
+.window-content {
+    flex: 1;
+    overflow: auto;
+    background: #1d1d1f;
+    user-select: none;
+    font-family: 'Segoe UI', 'DejaVu Sans Mono', monospace;
+    font-weight: bold;
+}
+
+.settings-window {
+    width: 680px;
+    height: 480px;
+}
+
+.settings-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.settings-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.settings-tab {
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'Segoe UI', 'DejaVu Sans Mono', monospace;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+}
+
+.settings-tab:hover {
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.settings-tab.active {
+    color: #ffffff;
+    border-bottom-color: #ffffff;
+}
+
+.settings-tab-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.settings-tab-pane {
+    display: none;
+    height: 100%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.settings-tab-pane.active {
+    display: block;
+}
+
+.wallpaper-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.wallpaper-item {
+    cursor: pointer;
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.wallpaper-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.wallpaper-name {
+    display: none;
+}
+
+
+.about-content {
+    display: flex;
+    padding: 50px 60px;
+    height: 100%;
+    align-items: center;
+    gap: 50px;
+    user-select: none;
+}
+
+.about-icon {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    background-image: url('wallpapers/wallpaper_1.jpg');
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.about-info {
+    flex: 1;
+    color: #ffffff;
+    font-family: 'Segoe UI', 'DejaVu Sans Mono', monospace;
+    font-weight: bold;
+}
+
+.about-title {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
+
+.about-version {
+    font-size: 15px;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.version-number {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+.version-build {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.about-specs {
+    margin-bottom: 30px;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #ffffff;
+}
+
+.spec-item {
+    margin-bottom: 4px;
+}
+
+.about-buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.about-button {
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.about-button:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.about-copyright {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.5;
+}
+
+.terminal-window {
+    width: 700px;
+    height: 500px;
+}
+
+.terminal-content {
+    background: rgba(10, 10, 10, 0.7);
+    color: #ffffff;
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 13px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.terminal-output {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 8px;
+}
+
+.terminal-output::-webkit-scrollbar {
+    display: none;
+}
+
+.terminal-output {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.terminal-line {
+    padding: 2px 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: #ffffff;
+    line-height: 1.4;
+}
+
+.terminal-prompt {
+    color: #ffffff;
+    margin-right: 4px;
+}
+
+.terminal-input-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.terminal-input-field {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 13px;
+    outline: none;
+    caret-color: #ffffff;
+}
+
+.terminal-input-field::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.notepad-window {
+    width: 600px;
+    height: 500px;
+}
+
+.notepad-content {
+    background: #1d1d1f;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.notepad-textarea {
+    flex: 1;
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 16px;
+    font-family: 'Segoe UI', 'DejaVu Sans Mono', monospace;
+    font-weight: bold;
+    font-size: 13px;
+    color: #ffffff;
+    background: #1d1d1f;
+    resize: none;
+    line-height: 1.6;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.notepad-textarea::-webkit-scrollbar {
+    display: none;
+}
+
+.notepad-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.explorer-window {
+    width: 700px;
+    height: 500px;
+}
+
+.explorer-content {
+    background: #1d1d1f;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.explorer-path {
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    font-family: 'Segoe UI', 'DejaVu Sans Mono', monospace;
+    font-weight: bold;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    user-select: none;
+}
+
+.explorer-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.explorer-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.explorer-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.explorer-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.explorer-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.explorer-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.explorer-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.explorer-icon {
+    font-size: 20px;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+}
+
+.explorer-name {
+    font-size: 14px;
+    font-family: 'Segoe UI', 'DejaVu Sans Mono', monospace;
+    font-weight: bold;
+    flex: 1;
+}
+
+.explorer-file-item,
+.explorer-app-item {
+    justify-content: space-between;
+}
+
+.explorer-size {
+    font-size: 13px;
+    font-family: 'Segoe UI', 'DejaVu Sans Mono', monospace;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.6);
+    margin-right: 12px;
+}
+
