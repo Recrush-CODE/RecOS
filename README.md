@@ -1,4 +1,4 @@
-<img width="1920" height="1080" alt="изображение" src="https://github.com/user-attachments/assets/c0a02971-5c6e-41ac-976b-734852aea6a1" />
+<img width="1920" height="1080" alt="изображение" src="https://github.com/user-attachments/assets/a8e5f5ad-5d86-49e3-8c40-315639fdfe0b" />
 
 # RecOS — Operating System
 
