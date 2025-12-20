@@ -183,8 +183,9 @@ function openSettings(immediatelyMinimize = false) {
                 </div>
                 <div class="about-specs">
                     <div class="spec-item">Operating System - RecOS</div>
-                    <div class="spec-item">Processor - Web (RE5-10150U)</div>
-                    <div class="spec-item">Memory - Web (32GB)</div>
+                    <div class="spec-item">Processor - Web</div>
+                    <div class="spec-item">Memory - Web</div>
+                    <div class="spec-item">Disk - Web</div>
                 </div>
             </div>
         </div>
